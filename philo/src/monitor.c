@@ -12,25 +12,19 @@
 
 #include "philo.h"
 
-static void	get_meal_info(t_philo *philo, long *last, long *meals)
-{
-	pthread_mutex_lock(&philo->meal_lock);
-	*last = philo->last_meal;
-	*meals = philo->meals_eaten;
-	pthread_mutex_unlock(&philo->meal_lock);
-}
-
 static int	check_philo(t_philo *philo)
 {
-	long	last;
 	long	meals;
 
-	get_meal_info(philo, &last, &meals);
-	if (get_time_ms() - last > philo->data->time_to_die)
+	pthread_mutex_lock(&philo->meal_lock);
+	if (get_time_ms() - philo->last_meal > philo->data->time_to_die)
 	{
 		print_death(philo);
+		pthread_mutex_unlock(&philo->meal_lock);
 		return (1);
 	}
+	meals = philo->meals_eaten;
+	pthread_mutex_unlock(&philo->meal_lock);
 	if (philo->data->must_eat >= 0 && meals < philo->data->must_eat)
 		return (-1);
 	return (0);

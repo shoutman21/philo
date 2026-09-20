@@ -50,6 +50,7 @@ struct s_data
 
 int		parse_args(int argc, char **argv, t_data *data);
 long	get_time_ms(void);
+void	precise_sleep(t_data *data, long ms);
 int		init_data(t_data *data);
 void	destroy_data(t_data *data);
 int		is_stopped(t_data *data);
